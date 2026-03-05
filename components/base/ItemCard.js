@@ -13,6 +13,7 @@ export default function ItemCard({
   ...props
 }) {
   return (
+  
     <button
       type="button"
       onClick={onClick}
@@ -20,6 +21,7 @@ export default function ItemCard({
         selected ? "border-[#FDB056] ring-2 ring-[#FDB056]/50" : "border-[#484D4E]"
       }`}
     >
+      {console.log("price=============",price)}
       <div
         className={`absolute top-0 left-12 transition-all duration-300 ease-out ${
           discountActive ? "opacity-100 scale-100" : "pointer-events-none opacity-0 scale-95"

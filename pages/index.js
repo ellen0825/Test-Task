@@ -17,16 +17,53 @@ export async function getServerSideProps() {
 
 export default function Home({ tariffs: initialTariffs }) {
   const [timerEnded, setTimerEnded] = useState(false)
-  const [tariffs, setTariffs] = useState(initialTariffs ?? [])
+  const [tariffs, setTariffs] = useState(() => Array.isArray(initialTariffs) ? initialTariffs : [])
 
-  // If server didn't return tariffs (e.g. fetch failed), load from API on client
+  // Use server data when it arrives or updates
   useEffect(() => {
-    if (Array.isArray(tariffs) && tariffs.length > 0) return
+    if (Array.isArray(initialTariffs) && initialTariffs.length > 0) {
+      setTariffs(initialTariffs)
+    }
+  }, [initialTariffs])
+
+  // When no tariffs from server, load on client: try /api/tariffs then external API
+  useEffect(() => {
     let cancelled = false
+    const mapFromRaw = (rawList) =>
+      (rawList || []).map((raw, i) => {
+        const fullPrice = Number(raw.full_price) || 0
+        const price = Number(raw.price) ?? 0
+        const pct = fullPrice > 0 ? Math.round(Math.max(0, Math.min(100, (1 - price / fullPrice) * 100))) : 0
+        const period = String(raw.period ?? "").trim()
+        const id = raw.id ? `${raw.id}-${period || i}` : `tariff-${i}`
+        return {
+          id,
+          period,
+          title: period,
+          price,
+          oldPrice: fullPrice,
+          description: String(raw.text ?? "").trim(),
+          discountPercent: pct,
+          featured: Boolean(raw.is_best),
+          isHit: Boolean(raw.is_best),
+        }
+      })
+    const trySet = (list) => {
+      if (cancelled || !list?.length) return
+      const mapped = list[0].oldPrice != null ? list : mapFromRaw(list)
+      if (mapped.length) setTariffs(mapped)
+    }
     fetch('/api/tariffs')
       .then((res) => res.json())
       .then((data) => {
-        if (!cancelled && data?.tariffs?.length) setTariffs(data.tariffs)
+        const list = Array.isArray(data) ? data : (data?.tariffs || data?.items || [])
+        if (list.length) {
+          trySet(list)
+          return
+        }
+        return fetch('https://t-core.fit-hub.pro/Test/GetTariffs', { headers: { Accept: 'application/json' } })
+          .then((r) => r.json())
+          .then((arr) => trySet(Array.isArray(arr) ? arr : []))
       })
       .catch((e) => console.error('Client tariffs fetch failed:', e))
     return () => { cancelled = true }
