@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Header from '../components/layout/Header'
 import Main from '../components/landing/Main'
@@ -15,8 +15,23 @@ export async function getServerSideProps() {
   return { props: { tariffs } }
 }
 
-export default function Home({ tariffs }) {
+export default function Home({ tariffs: initialTariffs }) {
   const [timerEnded, setTimerEnded] = useState(false)
+  const [tariffs, setTariffs] = useState(initialTariffs ?? [])
+
+  // If server didn't return tariffs (e.g. fetch failed), load from API on client
+  useEffect(() => {
+    if (Array.isArray(tariffs) && tariffs.length > 0) return
+    let cancelled = false
+    fetch('/api/tariffs')
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled && data?.tariffs?.length) setTariffs(data.tariffs)
+      })
+      .catch((e) => console.error('Client tariffs fetch failed:', e))
+    return () => { cancelled = true }
+  }, [])
+
   return (
     <div>
       <Head>
