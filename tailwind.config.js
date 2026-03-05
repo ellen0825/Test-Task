@@ -8,6 +8,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["Montserrat", "sans-serif"],
+        body: ["Montserrat", "sans-serif"],
+      },
       height: {
         15: "57px",
       },
