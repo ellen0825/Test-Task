@@ -134,19 +134,19 @@ export default function Main({ tariffs = [], timerEnded = false }) {
             </div>
 
             {/* Info message */}
-            <div className="mt-3 flex items-start gap-3 rounded-[22px] bg-[#2F3436] px-4 py-4 w-full">
+            <div className="mt-4 flex items-center gap-4 rounded-[18px] bg-[#2F3436] px-6 py-3 w-full max-w-[520px]">
 
-              <span className="mt-[6px] text-[#FDB056] text-xl">
-                !
-              </span>
+                <span className="text-[#FDB056] text-[18px] leading-none">
+                  !
+                </span>
 
-              <p className="text-sm md:text-base text-[#C9C9C9] leading-[1.5]">
-                Следуя плану на 3 месяца и более, люди получают
-                <br/>
-                в 2 раза лучший результат, чем за 1 месяц
-              </p>
+                <p className="text-[15px] text-[#C9C9C9] leading-[1.4]">
+                  Следуя плану на 3 месяца и более, люди получают
+                  <br />
+                  в 2 раза лучший результат, чем за 1 месяц
+                </p>
 
-            </div>
+              </div>
 
             {/* Checkbox */}
             <label className="flex items-start gap-3 cursor-pointer select-none w-full">
