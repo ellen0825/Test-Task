@@ -6,6 +6,7 @@ export default function ItemCard({
   price = 0,
   oldPrice = 0,
   description = "",
+  period = "3 месяца",
   selected = false,
   onClick,
   ...props
@@ -22,7 +23,7 @@ export default function ItemCard({
 
       <div className="flex flex-col items-center text-center mt-6">
         <div className="text-[26px] text-white mb-4">
-          3 месяца
+          {period}
         </div>
         <div
           className={`text-[50px] font-bold ${selected ? "text-[#FDB056]" : "text-white"}`}

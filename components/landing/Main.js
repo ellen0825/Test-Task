@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import CustomImage from "../base/CustomImage";
 import Badge from "../base/Badge";
 import ItemCard from "../base/ItemCard";
 import Button from "../base/Button";
 
-const PLAN_FOREVER = "forever";
-const PLAN_1990 = "1990";
-const PLAN_990 = "990";
-const PLAN_690 = "690";
+export default function Main({ tariffs = [] }) {
+  const { featuredTariff, listTariffs, defaultSelectedId } = useMemo(() => {
+    const list = Array.isArray(tariffs) ? [...tariffs] : [];
+    const featured = list.find((t) => t.featured) || list[0] || null;
+    const rest = featured ? list.filter((t) => t.id !== featured.id) : list;
+    const defaultId = featured?.id ?? list[0]?.id ?? null;
+    return { featuredTariff: featured, listTariffs: rest, defaultSelectedId: defaultId };
+  }, [tariffs]);
 
-export default function Main() {
-  const [selectedPlan, setSelectedPlan] = useState(PLAN_FOREVER);
+  const [selectedPlan, setSelectedPlan] = useState(defaultSelectedId);
+  const [agreed, setAgreed] = useState(false);
+  const [checkboxError, setCheckboxError] = useState(false);
 
   return (
     <div className="bg-[#232829] flex justify-center min-h-screen px-4 md:px-12 pt-24 pb-10">
@@ -41,72 +46,60 @@ export default function Main() {
           {/* Right content */}
           <div className="w-full lg:w-2/3 flex flex-col gap-6">
 
-            {/* Main price card */}
-            <button
-              type="button"
-              onClick={() => setSelectedPlan(PLAN_FOREVER)}
-              className={`w-full relative rounded-3xl bg-[#313637] border-2 text-left cursor-pointer ${
-                selectedPlan === PLAN_FOREVER
-                  ? "border-[#FDB056] ring-2 ring-[#FDB056]/50"
-                  : "border-[#FDB056]"
-              }`}
-            >
-              <Badge value={70} />
-
-              <div className="absolute top-4 right-6 text-lg text-[#FDB056]">
-                хит!
-              </div>
-
-              <div className="flex flex-col md:flex-row px-10 md:px-16 py-10 gap-6 items-center">
-                <div className="md:w-1/3 flex flex-col justify-center items-center text-center">
-                  <div className="text-white text-xl md:text-2xl mb-2">
-                    Навсегда
+            {/* Главный (featured) тариф */}
+            {featuredTariff && (
+              <button
+                type="button"
+                onClick={() => setSelectedPlan(featuredTariff.id)}
+                className={`w-full relative rounded-3xl bg-[#313637] border-2 text-left cursor-pointer ${
+                  selectedPlan === featuredTariff.id
+                    ? "border-[#FDB056] ring-2 ring-[#FDB056]/50"
+                    : "border-[#484D4E]"
+                }`}
+              >
+                <Badge value={featuredTariff.discountPercent ?? 0} />
+                {featuredTariff.isHit && (
+                  <div className="absolute top-4 right-6 text-lg text-[#FDB056]">
+                    хит!
                   </div>
-                  <div
-                    className={`text-4xl md:text-5xl font-bold leading-none ${
-                      selectedPlan === PLAN_FOREVER ? "text-[#FDB056]" : "text-[#FDB056]"
-                    }`}
-                  >
-                    5990 ₽
+                )}
+                <div className="flex flex-col md:flex-row px-10 md:px-16 py-10 gap-6 items-center">
+                  <div className="md:w-1/3 flex flex-col justify-center items-center text-center">
+                    <div className="text-white text-xl md:text-2xl mb-2">
+                      {featuredTariff.title}
+                    </div>
+                    <div
+                      className={`text-4xl md:text-5xl font-bold leading-none ${
+                        selectedPlan === featuredTariff.id ? "text-[#FDB056]" : "text-white"
+                      }`}
+                    >
+                      {featuredTariff.price} ₽
+                    </div>
+                    <div className="text-[#7E7E7E] text-lg line-through mt-1">
+                      {featuredTariff.oldPrice} ₽
+                    </div>
                   </div>
-                  <div className="text-[#7E7E7E] text-lg line-through mt-1">
-                    18 990 ₽
+                  <div className="md:w-2/3 flex text-[#CFCFCF] text-sm md:text-lg leading-relaxed items-center text-center md:text-left whitespace-pre-line">
+                    {featuredTariff.description}
                   </div>
                 </div>
-                <div className="md:w-2/3 flex text-[#CFCFCF] text-sm md:text-lg leading-relaxed items-center text-center md:text-left">
-                  Для тех, кто хочет всегда быть в форме
-                  <br />
-                  и поддерживать здоровье
-                </div>
-              </div>
-            </button>
+              </button>
+            )}
 
-            {/* Item cards */}
+            {/* Остальные тарифы */}
             <div className="flex flex-col sm:flex-row gap-6">
-              <ItemCard
-                price={1990}
-                oldPrice={3990}
-                description="asdfasdf"
-                value={50}
-                selected={selectedPlan === PLAN_1990}
-                onClick={() => setSelectedPlan(PLAN_1990)}
-              />
-              <ItemCard
-                price={990}
-                oldPrice={1690}
-                description="asdfasdf"
-                value={50}
-                selected={selectedPlan === PLAN_990}
-                onClick={() => setSelectedPlan(PLAN_990)}
-              />
-              <ItemCard
-                price={690}
-                oldPrice={990}
-                description="asdfasdf"
-                value={50}
-                selected={selectedPlan === PLAN_690}
-                onClick={() => setSelectedPlan(PLAN_690)}
-              />
+              {listTariffs.map((t) => (
+                <ItemCard
+                  key={t.id}
+                  price={t.price}
+                  oldPrice={t.oldPrice}
+                  description={t.description}
+                  period={t.period || t.title}
+                  value={t.discountPercent ?? 0}
+                  selected={selectedPlan === t.id}
+                  onClick={() => setSelectedPlan(t.id)}
+                />
+              ))}
             </div>
 
             {/* Info message */}
@@ -126,11 +119,20 @@ export default function Main() {
 
             {/* Checkbox */}
             <label className="flex items-start gap-3 cursor-pointer select-none w-full">
-
-              <input type="checkbox" className="peer sr-only"/>
-
-              <div className="w-[24px] h-[24px] border border-gray-400 rounded-sm flex items-center justify-center peer-checked:[&>svg]:opacity-100">
-
+              <input
+                type="checkbox"
+                className="peer sr-only"
+                checked={agreed}
+                onChange={(e) => {
+                  setAgreed(e.target.checked);
+                  setCheckboxError(false);
+                }}
+              />
+              <div
+                className={`w-[24px] h-[24px] border rounded-sm flex items-center justify-center flex-shrink-0 peer-checked:[&>svg]:opacity-100 ${
+                  checkboxError ? "border-red-500 bg-red-500/10" : "border-gray-400"
+                }`}
+              >
                 <svg
                   className="w-[14px] h-[14px] text-[#FDB056] opacity-0 transition"
                   viewBox="0 0 24 24"
@@ -140,7 +142,6 @@ export default function Main() {
                 >
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
-
               </div>
 
               <p className="text-sm md:text-base text-[#9AA0A6] leading-snug">
@@ -157,7 +158,15 @@ export default function Main() {
             </label>
 
             {/* Button */}
-            <Button>
+            <Button
+              onClick={() => {
+                if (!agreed) {
+                  setCheckboxError(true);
+                } else {
+                  // покупка
+                }
+              }}
+            >
               Купить
             </Button>
 

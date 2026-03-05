@@ -2,7 +2,19 @@ import Head from 'next/head'
 import Header from '../components/layout/Header'
 import Main from '../components/landing/Main'
 
-export default function Home() {
+import { getTariffs } from '../lib/tariffs'
+
+export async function getServerSideProps() {
+  let tariffs = []
+  try {
+    tariffs = await getTariffs()
+  } catch (e) {
+    console.error('Failed to fetch tariffs:', e)
+  }
+  return { props: { tariffs } }
+}
+
+export default function Home({ tariffs }) {
   return (
     <div>
       <Head>
@@ -11,8 +23,7 @@ export default function Home() {
         <link rel="icon" href="/logo.svg" />
       </Head>
       <Header />
-      <Main />
-
+      <Main tariffs={tariffs} />
     </div>
   )
 }
