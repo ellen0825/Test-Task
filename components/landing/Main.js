@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from "react";
 import CustomImage from "../base/CustomImage";
-import Badge from "../base/Badge";
 import ItemCard from "../base/ItemCard";
 import Button from "../base/Button";
 
@@ -57,72 +56,19 @@ export default function Main({ tariffs = [], timerEnded = false }) {
 
             {/* Главный (featured) тариф */}
             {featuredTariff && (
-              <button
-                type="button"
+              <ItemCard
+                price={featuredTariff.price}
+                oldPrice={featuredTariff.oldPrice}
+                description={featuredTariff.description}
+                period={featuredTariff.period}
+                title={featuredTariff.title}
+                value={featuredTariff.discountPercent ?? 0}
+                selected={selectedPlan === featuredTariff.id}
                 onClick={() => setSelectedPlan(featuredTariff.id)}
-                className={`w-full relative rounded-3xl bg-[#313637] border-2 text-left cursor-pointer overflow-hidden ${
-                  selectedPlan === featuredTariff.id
-                    ? "border-[#FDB056] ring-2 ring-[#FDB056]/50"
-                    : "border-[#484D4E]"
-                }`}
-              >
-                <div
-                  className={`absolute top-0 left-12 transition-all duration-300 ease-out ${
-                    timerEnded ? "pointer-events-none opacity-0 scale-95" : "opacity-100 scale-100"
-                  }`}
-                >
-                  <Badge value={featuredTariff.discountPercent ?? 0} />
-                </div>
-                {featuredTariff.isHit && !timerEnded && (
-                  <div className="absolute top-4 right-6 text-lg text-[#FDB056]">
-                    хит!
-                  </div>
-                )}
-                <div className="flex flex-col md:flex-row px-10 md:px-16 py-10 gap-6 items-center">
-                  <div className="md:w-1/3 flex flex-col justify-center items-center text-center relative min-h-[120px]">
-                    {/* Скидочный блок: цена + зачёркнутая старая */}
-                    <div
-                      className={`absolute inset-0 flex flex-col justify-center items-center text-center transition-all duration-300 ease-out ${
-                        timerEnded ? "pointer-events-none opacity-0 scale-95" : "opacity-100 scale-100"
-                      }`}
-                    >
-                      <div className="text-white text-xl md:text-2xl mb-2">
-                        {featuredTariff.title}
-                      </div>
-                      <div
-                        className={`text-4xl md:text-5xl font-bold leading-none ${
-                          selectedPlan === featuredTariff.id ? "text-[#FDB056]" : "text-white"
-                        }`}
-                      >
-                        {featuredTariff.price} ₽
-                      </div>
-                      <div className="text-[#7E7E7E] text-lg line-through mt-1">
-                        {featuredTariff.oldPrice} ₽
-                      </div>
-                    </div>
-                    {/* Блок без скидки: только полная цена */}
-                    <div
-                      className={`absolute inset-0 flex flex-col justify-center items-center text-center transition-all duration-300 ease-out ${
-                        timerEnded ? "opacity-100 scale-100" : "pointer-events-none opacity-0 scale-95"
-                      }`}
-                    >
-                      <div className="text-white text-xl md:text-2xl mb-2">
-                        {featuredTariff.title}
-                      </div>
-                      <div
-                        className={`text-4xl md:text-5xl font-bold leading-none ${
-                          selectedPlan === featuredTariff.id ? "text-[#FDB056]" : "text-white"
-                        }`}
-                      >
-                        {featuredTariff.oldPrice} ₽
-                      </div>
-                    </div>
-                  </div>
-                  <div className="md:w-2/3 flex text-[#CFCFCF] text-sm md:text-lg leading-relaxed items-center text-center md:text-left whitespace-pre-line">
-                    {featuredTariff.description}
-                  </div>
-                </div>
-              </button>
+                discountActive={!timerEnded}
+                isHit={featuredTariff.isHit}
+                featured
+              />
             )}
 
             {/* Остальные тарифы */}
@@ -138,6 +84,7 @@ export default function Main({ tariffs = [], timerEnded = false }) {
                   selected={selectedPlan === t.id}
                   onClick={() => setSelectedPlan(t.id)}
                   discountActive={!timerEnded}
+                  isHit={t.isHit}
                 />
               ))}
             </div>
