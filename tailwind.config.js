@@ -74,9 +74,19 @@ module.exports = {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.4" },
         },
+        "price-out": {
+          "0%": { opacity: "1", transform: "scale(1)" },
+          "100%": { opacity: "0", transform: "scale(0.97)" },
+        },
+        "price-in": {
+          "0%": { opacity: "0", transform: "scale(0.97)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
       },
       animation: {
         blink: "blink 1s ease-in-out infinite",
+        "price-out": "price-out 0.35s ease-out forwards",
+        "price-in": "price-in 0.35s ease-out 0.15s forwards",
       },
       backgroundImage: {
         // logo: "url('/src/assets/logo/logo_360.png')",

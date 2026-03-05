@@ -9,7 +9,7 @@ function formatTime(seconds) {
   return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 }
 
-export default function Header() {
+export default function Header({ onTimerEnd }) {
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS);
   const isWarning = secondsLeft <= WARNING_THRESHOLD && secondsLeft > 0;
 
@@ -19,6 +19,10 @@ export default function Header() {
     }, 1000);
     return () => clearInterval(t);
   }, []);
+
+  useEffect(() => {
+    if (secondsLeft === 0 && onTimerEnd) onTimerEnd();
+  }, [secondsLeft, onTimerEnd]);
 
   return (
     <div className="fixed w-full bg-[#1D5B43] z-50 py-2 px-0 md:px-20">
