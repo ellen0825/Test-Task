@@ -26,16 +26,17 @@ export default function Home({ tariffs: initialTariffs }) {
     }
   }, [initialTariffs])
 
-  // When no tariffs from server, load on client: try /api/tariffs then external API
+  // Load tariffs on client if server didn't provide any (parallel: /api + external)
   useEffect(() => {
     let cancelled = false
+    const EXTERNAL_URL = 'https://t-core.fit-hub.pro/Test/GetTariffs'
     const mapFromRaw = (rawList) =>
       (rawList || []).map((raw, i) => {
         const fullPrice = Number(raw.full_price) || 0
         const price = Number(raw.price) ?? 0
         const pct = fullPrice > 0 ? Math.round(Math.max(0, Math.min(100, (1 - price / fullPrice) * 100))) : 0
         const period = String(raw.period ?? "").trim()
-        const id = raw.id ? `${raw.id}-${period || i}` : `tariff-${i}`
+        const id = raw.id ? `${raw.id}-${period || i}-${i}` : `tariff-${i}`
         return {
           id,
           period,
@@ -48,24 +49,35 @@ export default function Home({ tariffs: initialTariffs }) {
           isHit: Boolean(raw.is_best),
         }
       })
-    const trySet = (list) => {
+    const toList = (data) => Array.isArray(data) ? data : (data?.tariffs || data?.items || data?.data || [])
+    const toMapped = (list) => (list?.length && list[0].oldPrice != null) ? list : mapFromRaw(list || [])
+    const apply = (list) => {
       if (cancelled || !list?.length) return
-      const mapped = list[0].oldPrice != null ? list : mapFromRaw(list)
+      const mapped = toMapped(list)
       if (mapped.length) setTariffs(mapped)
     }
-    fetch('/api/tariffs')
-      .then((res) => res.json())
-      .then((data) => {
-        const list = Array.isArray(data) ? data : (data?.tariffs || data?.items || [])
-        if (list.length) {
-          trySet(list)
-          return
-        }
-        return fetch('https://t-core.fit-hub.pro/Test/GetTariffs', { headers: { Accept: 'application/json' } })
-          .then((r) => r.json())
-          .then((arr) => trySet(Array.isArray(arr) ? arr : []))
-      })
-      .catch((e) => console.error('Client tariffs fetch failed:', e))
+    const tryApi = () =>
+      fetch('/api/tariffs')
+        .then((res) => res.json())
+        .then((data) => toList(data))
+        .catch(() => [])
+    const tryExternal = () =>
+      fetch(EXTERNAL_URL, { headers: { Accept: 'application/json' } })
+        .then((r) => r.json())
+        .then((data) => (Array.isArray(data) ? data : toList(data)))
+        .catch(() => [])
+    const fallbackTariffs = [
+      { id: 'fb-0', period: '1 неделя', title: '1 неделя', price: 149, oldPrice: 999, description: 'Чтобы просто начать', discountPercent: 85, featured: false, isHit: false },
+      { id: 'fb-1', period: '1 месяц', title: '1 месяц', price: 399, oldPrice: 1690, description: 'Чтобы получить первые результаты', discountPercent: 76, featured: false, isHit: false },
+      { id: 'fb-2', period: '3 месяца', title: '3 месяца', price: 990, oldPrice: 3990, description: 'Привести тело в порядок', discountPercent: 75, featured: false, isHit: false },
+      { id: 'fb-3', period: 'Навсегда', title: 'Навсегда', price: 5990, oldPrice: 18990, description: 'Для тех, кто хочет всегда быть в форме и поддерживать здоровье', discountPercent: 68, featured: true, isHit: true },
+    ]
+    Promise.all([tryApi(), tryExternal()]).then(([fromApi, fromExternal]) => {
+      if (cancelled) return
+      const list = (fromApi?.length ? fromApi : null) ?? (fromExternal?.length ? fromExternal : null) ?? []
+      if (list.length) apply(list)
+      else setTariffs(fallbackTariffs)
+    })
     return () => { cancelled = true }
   }, [])
 

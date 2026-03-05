@@ -8,7 +8,10 @@ export default function Main({ tariffs = [], timerEnded = false }) {
   const { featuredTariff, listTariffs, defaultSelectedId } = useMemo(() => {
     const list = Array.isArray(tariffs) ? [...tariffs] : [];
     const featured = list.find((t) => t.featured) || list[0] || null;
-    const rest = featured ? list.filter((t) => t.id !== featured.id) : list;
+    // All except the featured one (compare by id so we never exclude by reference)
+    const rest = featured != null
+      ? list.filter((t) => String(t?.id) !== String(featured?.id))
+      : list;
     const defaultId = featured?.id ?? list[0]?.id ?? null;
     return { featuredTariff: featured, listTariffs: rest, defaultSelectedId: defaultId };
   }, [tariffs]);
@@ -123,7 +126,6 @@ export default function Main({ tariffs = [], timerEnded = false }) {
             )}
 
             {/* Остальные тарифы */}
-            {console.log("=========listTariffs",listTariffs)}
             <div className="flex flex-col sm:flex-row gap-6">
               {listTariffs.map((t) => (
                 <ItemCard
@@ -220,25 +222,21 @@ export default function Main({ tariffs = [], timerEnded = false }) {
         </div>
 
         {/* Guarantee section */}
-        <div className="flex flex-col  px-6 py-8 rounded-2xl border border-white/10 bg-[#232829] gap-5 mt-14">
+        <div className="flex flex-col items-start px-6 py-8 rounded-2xl border border-white/10 bg-[#232829] gap-5 mt-14">
 
-        <div className="flex flex-col px-4 md:px-6 py-8 rounded-2xl border border-white/10 bg-[#232829] gap-5 mt-14">
+            <div className="flex items-center justify-center w-full max-w-[420px] h-[60px] rounded-full border border-green-500">
+              <p className="text-[#81FE95] text-base md:text-xl text-left">
+                гарантия возврата 30 дней
+              </p>
+            </div>
 
-          <div className="flex items-center justify-center w-full max-w-[420px] h-[60px] rounded-full border border-green-500 mx-auto">
-            <p className="text-[#81FE95] text-base md:text-xl text-center">
-              гарантия возврата 30 дней
+            <p className="text-[#A5A5A5] text-sm md:text-lg leading-relaxed text-left">
+              Мы уверены, что наш план сработает для тебя и ты увидишь видимые результаты
+              уже через 4 недели! Мы даже готовы полностью вернуть тебе деньги в течение
+              30 дней с момента покупки, если ты не получишь видимых результатов.
             </p>
-          </div>
-
-          <p className="text-[#A5A5A5] text-sm md:text-lg leading-relaxed text-center md:text-left">
-            Мы уверены, что наш план сработает для тебя и ты увидишь видимые результаты
-            уже через 4 недели! Мы даже готовы полностью вернуть тебе деньги в течение
-            30 дней с момента покупки, если ты не получишь видимых результатов.
-          </p>
 
           </div>
-
-        </div>
 
       </div>
     </div>
