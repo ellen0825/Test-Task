@@ -6,7 +6,7 @@ export default function ItemCard({
   price = 0,
   oldPrice = 0,
   description = "",
-  period = "3 месяца",
+  period = "",
   selected = false,
   onClick,
   discountActive = true,
