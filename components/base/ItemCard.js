@@ -70,8 +70,8 @@ export default function ItemCard({
         {isNarrow ? (
           <div className={`flex flex-col items-start w-full text-left ${narrowPaddingLeft} ${narrowPaddingRight} ${narrowPaddingTop} pb-6`}>
             <div className="text-white text-xl font-medium mb-3">{titleLabel}</div>
-            <div className="flex items-start gap-4 w-full min-w-0">
-              <div className="flex flex-col shrink-0 max-w-[45%]">
+            <div className="flex items-start justify-between gap-4 w-full min-w-0">
+              <div className="flex flex-col shrink-0 max-w-[45%] text-left">
                 <div
                   className={`${mainPriceFontClasses} ${
                     selected ? "text-[#FDB056]" : "text-white"
@@ -83,7 +83,7 @@ export default function ItemCard({
                   {oldPrice} ₽
                 </div>
               </div>
-              <div className="text-[#CFCFCF] text-sm sm:text-base leading-relaxed flex-1 min-w-0">
+              <div className="text-[#CFCFCF] text-sm sm:text-base leading-relaxed flex-1 min-w-0 text-right">
                 {description}
               </div>
             </div>
@@ -128,7 +128,7 @@ export default function ItemCard({
           <div className={`text-white font-medium text-xl mb-2 text-left pt-14`}>
             {period}
           </div>
-          <div className="flex items-start gap-3 w-full mt-2 min-w-0">
+          <div className="flex items-start justify-between gap-3 w-full mt-2 min-w-0">
             <div className="flex flex-col shrink-0 text-left max-w-[42%]">
               <div
                 className={`${mainPriceFontClasses} ${
@@ -141,7 +141,7 @@ export default function ItemCard({
                 {oldPrice} ₽
               </div>
             </div>
-            <div className="text-[#CFCFCF] text-xs sm:text-sm text-left flex-1 min-w-0 leading-relaxed">
+            <div className="text-[#CFCFCF] text-xs sm:text-sm text-right flex-1 min-w-0 leading-relaxed">
               {description}
             </div>
           </div>
