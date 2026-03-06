@@ -31,7 +31,7 @@ export default function Header({ onTimerEnd }) {
           Успейте открыть пробную неделю
         </div>
         <div
-          className={`font-bold text-3xl text-center text-[40px] ${
+          className={`font-bold text-3xl text-center text-[40px] !transition-none ${
             isWarning
               ? "text-red-500 animate-blink"
               : "text-[#FFBB00]"
