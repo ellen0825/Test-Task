@@ -58,12 +58,12 @@ export default function ItemCard({
         <div
           className={`font-bold leading-tight tracking-tight ${
             selected ? "text-[#FDB056]" : "text-white"
-          } text-xl md:text-[35px]`}
+          } text-xl md:text-[40px]`}
         >
           {price} ₽
         </div>
         {/* OLD PRICE — right below the price, aligned right; slightly larger text */}
-        <div className="w-full text-sm sm:text-base md:text-lg text-[#919191] line-through text-right mt-0.5 sm:mt-1">
+        <div className="w-full text-sm sm:text-base md:text-lg text-[#919191] line-through text-right mt-0.5 sm:mt-1 md:pr-[40px] lg:pr-[0px]">
           {oldPrice} ₽
         </div>
       </div>
@@ -133,7 +133,7 @@ export default function ItemCard({
         <div className="flex flex-col md:flex-row px-5 sm:px-6 md:px-12 lg:px-16 py-6 sm:py-8 md:py-10 gap-6 sm:gap-8 md:gap-12 items-center">
           {priceBlock}
 
-          <div className="w-full md:w-2/3 text-[#CFCFCF] text-xs sm:text-sm md:text-[16px] leading-relaxed text-center md:text-left whitespace-pre-line px-2 sm:px-0">
+          <div className="w-full md:w-2/3 text-[#CFCFCF] text-xs sm:text-sm lg:text-[13px] md:text-[16px] leading-relaxed text-center md:text-left whitespace-pre-line px-2 sm:px-0">
             {description}
           </div>
         </div>
@@ -168,7 +168,7 @@ export default function ItemCard({
       {priceBlock}
 
       {/* DESCRIPTION */}
-      <div className="text-[11px] md:text-[16px] text-[#B3B3B3] mt-4 sm:mt-6 leading-snug text-left">
+      <div className="lg:text-[12px] md:text-[16px] text-[#B3B3B3] mt-4 sm:mt-6 leading-snug text-left">
         <div>{description}</div>
         <div className="text-[#9a9a9a]">в порядок</div>
       </div>

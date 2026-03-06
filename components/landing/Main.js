@@ -220,7 +220,7 @@ export default function Main({ tariffs = [], timerEnded = false }) {
         <div className="flex flex-col items-start px-6 py-8 rounded-2xl border border-white/10 bg-[#232829] gap-5 mt-14">
 
           <div className="flex items-center justify-center w-full max-w-[420px] h-[60px] rounded-full border border-green-500">
-            <p className="text-[#81FE95] text-base md:text-xl text-left">
+            <p className="text-[#81FE95] text-sm md:text-xl text-left ">
               гарантия возврата 30 дней
             </p>
           </div>

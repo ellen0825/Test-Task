@@ -50,7 +50,7 @@ export default function ItemCardMobile({
         <div
           className={`font-bold leading-tight tracking-tight ${
             selected ? "text-[#FDB056]" : "text-white"
-          } text-2xl sm:text-[2.25rem]`}
+          } text-[2rem] sm:text-[2.5rem]`}
         >
           {price} ₽
         </div>
@@ -109,8 +109,8 @@ export default function ItemCardMobile({
     </div>
   );
 
-  /* Shared two-column grid: 50/50; align rows to top so period and description start at same height */
-  const cardGridClasses = "grid grid-cols-2 gap-4 sm:gap-6 px-5 sm:px-8 pt-14 sm:pt-20 pb-5 sm:pb-6 items-start min-h-[100px]";
+  /* Shared two-column grid: 50/50; left padding larger, right padding smaller */
+  const cardGridClasses = "grid grid-cols-2 gap-4 sm:gap-6 pl-6 pr-4 sm:pl-10 sm:pr-6 pt-14 sm:pt-20 pb-5 sm:pb-6 items-start min-h-[100px]";
 
   /* ================= FEATURED CARD (MOBILE) ================= */
   if (featured) {
