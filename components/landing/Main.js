@@ -98,8 +98,8 @@ export default function Main({ tariffs = [], timerEnded = false }) {
               />
             )}
 
-            {/* Остальные тарифы: одна колонка на узких экранах, как в макете */}
-            <div className="flex flex-col md:flex-row gap-4 sm:gap-5 md:gap-6 flex-wrap">
+            {/* Остальные тарифы: колонка на малых экранах, ряд из трёх на MD/LG */}
+            <div className="flex flex-col md:flex-row md:flex-nowrap gap-4 sm:gap-5 md:gap-6">
               {listTariffs.map((t) => (
                 <ItemCard
                   key={t.id}

@@ -2,8 +2,9 @@ import React from "react";
 import Badge from "./Badge";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-const mainPriceFontClasses =
-  "font-bold leading-tight tracking-tight text-[42px]";
+const priceBlockClasses = "transition-all duration-300 ease-out";
+const discountHideClasses = "pointer-events-none opacity-0 scale-95";
+const discountShowClasses = "opacity-100 scale-100";
 
 export default function ItemCard({
   value = "",
@@ -19,41 +20,102 @@ export default function ItemCard({
   featured = false,
 }) {
   const titleLabel = title ?? period;
-  const isMobile = useMediaQuery("(max-width:600px)");
-  const isNarrow = useMediaQuery("(max-width:1000px)"); // price + description side by side below 1000px
+  const isMobile = useMediaQuery("(max-width:350px)");
 
   const badgeWrap = (
     <div
-      className={`absolute top-0 ${
-        isMobile ? "right-3 top-3 flex flex-col gap-1 items-end" : "left-7"
-      } transition-all ${
-        discountActive
-          ? "opacity-100 scale-100"
-          : "pointer-events-none opacity-0 scale-95"
+      className={`absolute top-0 left-4 sm:left-6 transition-all duration-300 ease-out ${
+        discountActive ? "opacity-100 scale-100" : discountHideClasses
       }`}
     >
-      {discountActive && <Badge value={value} />}
-      {isMobile && isHit && discountActive && (
-        <span className="text-[#FDB056] font-semibold text-base">хит!</span>
-      )}
+      <Badge value={value} />
     </div>
   );
 
   const hitLabel =
-    !isMobile && isHit && discountActive ? (
-      <div className="text-[#FDB056] font-semibold text-xl absolute top-3 right-4 sm:top-4 sm:right-6">
+    isHit && discountActive ? (
+      <div
+        className={`text-[#FDB056] font-semibold text-xs sm:text-sm ${
+          featured
+            ? "absolute top-3 right-4 sm:top-4 sm:right-6"
+            : "absolute top-3 right-3 sm:top-4 sm:right-4"
+        }`}
+      >
         хит!
       </div>
     ) : null;
+
+  const priceContent = (showTitle) => (
+    <>
+      {showTitle && (
+        <div className="text-white mb-1 sm:mb-2 text-sm font-medium">
+          {titleLabel}
+        </div>
+      )}
+
+      {/* PRICE */}
+      <div
+        className={`font-bold leading-tight tracking-tight ${
+          selected ? "text-[#FDB056]" : "text-white"
+        } text-xl md:text-[35px]`}
+      >
+        {price} ₽
+      </div>
+
+      {/* OLD PRICE */}
+      <div className="w-full text-xs sm:text-sm md:text-base text-[#919191] line-through text-right mt-0.5 sm:mt-1">
+        {oldPrice} ₽
+      </div>
+    </>
+  );
+
+  const priceContentFull = (showTitle) => (
+    <>
+      {showTitle && (
+        <div className="text-white mb-1 sm:mb-2 text-sm sm:text-base font-medium">
+          {titleLabel}
+        </div>
+      )}
+
+      <div
+        className={`font-bold leading-tight tracking-tight ${
+          selected ? "text-[#FDB056]" : "text-white"
+        } text-xl md:text-[18px]`}
+      >
+        {oldPrice} ₽
+      </div>
+    </>
+  );
+
+  const priceBlock = (
+    <div
+      className={`flex flex-col justify-center items-center text-center relative min-h-[90px] sm:min-h-[110px] ${
+        featured ? "w-full md:w-1/3" : ""
+      }`}
+    >
+      <div
+        className={`absolute inset-0 flex flex-col justify-center items-center text-center ${priceBlockClasses} ${
+          discountActive ? discountShowClasses : discountHideClasses
+        }`}
+      >
+        {priceContent(featured)}
+      </div>
+
+      <div
+        className={`absolute inset-0 flex flex-col justify-center items-center text-center ${priceBlockClasses} ${
+          discountActive ? discountHideClasses : discountShowClasses
+        }`}
+      >
+        {priceContentFull(featured)}
+      </div>
+    </div>
+  );
 
   const baseCardClasses = `w-full relative rounded-3xl text-left cursor-pointer overflow-hidden ${
     selected
       ? "border-2 border-[#FDB056] ring-2 ring-[#FDB056]/50"
       : "border-2 border-[#484D4E]"
   }`;
-  const narrowPaddingLeft = isMobile ? "pl-5" : "pl-20";
-  const narrowPaddingRight = isMobile ? "pr-24" : "pr-20";
-  const narrowPaddingTop = "pt-14";
 
   /* ================= FEATURED CARD ================= */
 
@@ -67,47 +129,13 @@ export default function ItemCard({
         {badgeWrap}
         {hitLabel}
 
-        {isNarrow ? (
-          <div className={`flex flex-col items-start w-full text-left ${narrowPaddingLeft} ${narrowPaddingRight} ${narrowPaddingTop} pb-6`}>
-            <div className="text-white text-xl font-medium mb-3">{titleLabel}</div>
-            <div className="flex items-start justify-between gap-4 w-full min-w-0">
-              <div className="flex flex-col shrink-0 max-w-[45%] text-left">
-                <div
-                  className={`${mainPriceFontClasses} ${
-                    selected ? "text-[#FDB056]" : "text-white"
-                  } text-[28px] sm:text-[34px]`}
-                >
-                  {price} ₽
-                </div>
-                <div className="text-[#919191] text-base sm:text-lg line-through mt-0.5">
-                  {oldPrice} ₽
-                </div>
-              </div>
-              <div className="text-[#CFCFCF] text-sm sm:text-base leading-relaxed flex-1 min-w-0 text-right">
-                {description}
-              </div>
-            </div>
+        <div className="flex flex-col md:flex-row px-5 sm:px-6 md:px-12 lg:px-16 py-6 sm:py-8 md:py-10 gap-6 sm:gap-8 md:gap-12 items-center">
+          {priceBlock}
+
+          <div className="w-full md:w-2/3 text-[#CFCFCF] text-xs sm:text-sm md:text-[14px] leading-relaxed text-center md:text-left whitespace-pre-line px-2 sm:px-0">
+            {description}
           </div>
-        ) : (
-          <div className="flex flex-col md:flex-row px-5 sm:px-6 md:px-12 lg:px-16 py-6 sm:py-8 md:py-10 gap-6 sm:gap-8 md:gap-12 items-center">
-            <div className="flex flex-col items-center md:items-start">
-              <div className="text-white text-xl mb-1">{titleLabel}</div>
-              <div
-                className={`${mainPriceFontClasses} ${
-                  selected ? "text-[#FDB056]" : "text-white"
-                }`}
-              >
-                {price} ₽
-              </div>
-              <div className="text-[#919191] text-xl line-through">
-                {oldPrice} ₽
-              </div>
-            </div>
-            <div className="line-clamp-2 w-full md:w-2/3 text-[#CFCFCF] text-xl leading-relaxed text-center md:text-left whitespace-pre-line px-2 sm:px-0">
-              {description}
-            </div>
-          </div>
-        )}
+        </div>
       </button>
     );
   }
@@ -118,58 +146,31 @@ export default function ItemCard({
     <button
       type="button"
       onClick={onClick}
-      className={`${baseCardClasses} bg-[#313637] min-w-0 flex-1 flex flex-col ${isNarrow ? `${narrowPaddingLeft} ${narrowPaddingRight} py-5` : "px-4 sm:px-5 md:px-6 py-5 sm:py-6 md:py-8"}`}
+      className={`${baseCardClasses} bg-[#313637] min-w-0 flex-1 flex flex-col px-4 sm:px-5 md:px-6 py-5 sm:py-6 md:py-8`}
     >
-      {badgeWrap}
+      <div
+        className={`absolute top-0 ${
+          !isMobile ? "left-5" : "right-10"
+        } ${priceBlockClasses} ${
+          discountActive ? discountShowClasses : discountHideClasses
+        }`}
+      >
+        <Badge value={value} />
+      </div>
+
       {hitLabel}
 
-      {isNarrow ? (
-        <>
-          <div className={`text-white font-medium text-xl mb-2 text-left pt-14`}>
-            {period}
-          </div>
-          <div className="flex items-start justify-between gap-3 w-full mt-2 min-w-0">
-            <div className="flex flex-col shrink-0 text-left max-w-[42%]">
-              <div
-                className={`${mainPriceFontClasses} ${
-                  selected ? "text-[#FDB056]" : "text-white"
-                } text-[26px] sm:text-[30px]`}
-              >
-                {price} ₽
-              </div>
-              <div className="text-[#919191] text-xs sm:text-sm line-through mt-0.5">
-                {oldPrice} ₽
-              </div>
-            </div>
-            <div className="text-[#CFCFCF] text-xs sm:text-sm text-right flex-1 min-w-0 leading-relaxed">
-              {description}
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="text-white font-medium text-center mt-8 sm:mt-10 mb-3 sm:mb-4 text-[28px]">
-            {period}
-          </div>
-          <div className="flex flex-col items-center">
-            <div
-              className={`${mainPriceFontClasses} ${
-                selected ? "text-[#FDB056]" : "text-white"
-              }`}
-            >
-              {price} ₽
-            </div>
+      <div className="text-base sm:text-lg md:text-xl lg:text-[17px] text-white text-center mt-8 sm:mt-10 mb-3 sm:mb-4 font-medium">
+        {period}
+      </div>
 
-            <div className="text-[#919191] text-xl line-through mt-1">
-              {oldPrice} ₽
-            </div>
-          </div>
+      {priceBlock}
 
-          <div className="text-[#B3B3B3] mt-6 leading-snug text-left text-[20px] line-clamp-2">
-            {description}
-          </div>
-        </>
-      )}
+      {/* DESCRIPTION */}
+      <div className="text-[11px] md:text-[13px] text-[#B3B3B3] mt-4 sm:mt-6 leading-snug text-left">
+        <div>{description}</div>
+        <div className="text-[#9a9a9a]">в порядок</div>
+      </div>
     </button>
   );
 }

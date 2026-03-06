@@ -6,6 +6,6 @@ export default function Badge({
   ...props
 }) {
   return (
-    <div className=" w-[70px] h-[40px] rounded-b-[8px] bg-[#FD5656] text-white text-center text-xl py-[5px]">-{value ? value : 0}%</div>
+    <div className="min-w-[55px] h-[35px] rounded-b-[8px] bg-[#FD5656] text-white text-center text-bzse py-[5px] px-3 flex items-center justify-center">-{value ? value : 0}%</div>
   );
 }
