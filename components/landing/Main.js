@@ -1,9 +1,11 @@
 import React, { useState, useMemo } from "react";
 import CustomImage from "../base/CustomImage";
 import ItemCard from "../base/ItemCard";
+import ItemCardMobile from "../base/ItemCardMobile";
 import Button from "../base/Button";
 import Link from "next/link";
 import useMediaQuery from "@mui/material/useMediaQuery";
+
 export default function Main({ tariffs = [], timerEnded = false }) {
   const { featuredTariff, listTariffs, defaultSelectedId, allTariffs } = useMemo(() => {
     const list = Array.isArray(tariffs) ? [...tariffs] : [];
@@ -22,6 +24,8 @@ export default function Main({ tariffs = [], timerEnded = false }) {
   const [checkboxError, setCheckboxError] = useState(false);
   const [purchaseSubmitted, setPurchaseSubmitted] = useState(false);
   const isMobile = useMediaQuery("(max-width:380px)");
+  const useMobileCard = useMediaQuery("(max-width:960px)");
+  const CardComponent = useMobileCard ? ItemCardMobile : ItemCard;
   const selectedTariff = useMemo(
     () => allTariffs.find((t) => String(t?.id) === String(selectedPlan)),
     [allTariffs, selectedPlan]
@@ -72,8 +76,8 @@ export default function Main({ tariffs = [], timerEnded = false }) {
             />
           </div>
 
-          {/* Right content */}
-          <div className="w-full lg:w-2/3 flex flex-col gap-4 sm:gap-6 min-w-0">
+          {/* Right content: side margins on mobile, full width on desktop */}
+          <div className="w-full lg:w-2/3 flex flex-col gap-4 sm:gap-6 min-w-0 mx-3 md:mx-0">
 
             {!featuredTariff && listTariffs.length === 0 && (
               <div className="rounded-3xl bg-[#2F3436] border border-[#484D4E] px-8 py-12 text-center">
@@ -83,7 +87,7 @@ export default function Main({ tariffs = [], timerEnded = false }) {
 
             {/* Главный (featured) тариф */}
             {featuredTariff && (
-              <ItemCard
+              <CardComponent
                 price={featuredTariff.price}
                 oldPrice={featuredTariff.oldPrice}
                 description={featuredTariff.description}
@@ -101,7 +105,7 @@ export default function Main({ tariffs = [], timerEnded = false }) {
             {/* Остальные тарифы: колонка на малых экранах, ряд из трёх на MD/LG */}
             <div className="flex flex-col md:flex-row md:flex-nowrap gap-4 sm:gap-5 md:gap-6">
               {listTariffs.map((t) => (
-                <ItemCard
+                <CardComponent
                   key={t.id}
                   price={t.price}
                   oldPrice={t.oldPrice}
