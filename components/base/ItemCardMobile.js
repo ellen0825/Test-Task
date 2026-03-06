@@ -50,7 +50,7 @@ export default function ItemCardMobile({
         <div
           className={`font-bold leading-tight tracking-tight ${
             selected ? "text-[#FDB056]" : "text-white"
-          } text-2xl sm:text-[2rem]`}
+          } text-2xl sm:text-[2.25rem]`}
         >
           {price} ₽
         </div>
@@ -95,20 +95,22 @@ export default function ItemCardMobile({
     </div>
   );
 
-  /* Right column: description only (badges are at card top-right) */
+  /* Right column: description aligned to top (same height as period), left-aligned text */
   const descriptionBlock = (
-    <div className="flex flex-col items-end justify-start gap-2 min-w-0 flex-1 pt-7 sm:pt-9">
-      <div className="w-full text-right text-white text-sm sm:text-base leading-snug min-w-0">
+    <div className="flex flex-col items-start justify-start gap-2 min-w-0 flex-1">
+      <div className="w-full text-left text-white text-sm sm:text-base leading-snug min-w-0">
         <p className="text-[#CFCFCF] line-clamp-2 break-words">
           {description}
         </p>
-        
+        {!featured && (
+          <p className="text-[#9a9a9a] text-xs sm:text-sm mt-0.5">в порядок</p>
+        )}
       </div>
     </div>
   );
 
-  /* Shared two-column grid: 50/50; generous padding */
-  const cardGridClasses = "grid grid-cols-2 gap-4 sm:gap-6 px-5 sm:px-8 pt-14 sm:pt-20 pb-5 sm:pb-6 items-center min-h-[100px]";
+  /* Shared two-column grid: 50/50; align rows to top so period and description start at same height */
+  const cardGridClasses = "grid grid-cols-2 gap-4 sm:gap-6 px-5 sm:px-8 pt-14 sm:pt-20 pb-5 sm:pb-6 items-start min-h-[100px]";
 
   /* ================= FEATURED CARD (MOBILE) ================= */
   if (featured) {
@@ -122,8 +124,8 @@ export default function ItemCardMobile({
         <div className="min-w-0 flex flex-col items-start justify-center text-left">
           {priceBlock}
         </div>
-        <div className="flex flex-col items-end justify-center gap-2 min-w-0 pt-7 sm:pt-9">
-          <p className="text-[#CFCFCF] text-sm sm:text-base text-right leading-snug w-full line-clamp-2 break-words">
+        <div className="flex flex-col items-start justify-start gap-2 min-w-0">
+          <p className="text-[#CFCFCF] text-sm sm:text-base text-left leading-snug w-full line-clamp-2 break-words">
             {description}
           </p>
         </div>
