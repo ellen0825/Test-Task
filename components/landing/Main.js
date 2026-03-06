@@ -5,7 +5,7 @@ import Button from "../base/Button";
 import Link from "next/link";
 import useMediaQuery from "@mui/material/useMediaQuery";
 export default function Main({ tariffs = [], timerEnded = false }) {
-  const { featuredTariff, listTariffs, defaultSelectedId } = useMemo(() => {
+  const { featuredTariff, listTariffs, defaultSelectedId, allTariffs } = useMemo(() => {
     const list = Array.isArray(tariffs) ? [...tariffs] : [];
     const featured = list.find((t) => t.featured) || list[0] || null;
     // All except the featured one (compare by id so we never exclude by reference)
@@ -13,7 +13,8 @@ export default function Main({ tariffs = [], timerEnded = false }) {
       ? list.filter((t) => String(t?.id) !== String(featured?.id))
       : list;
     const defaultId = featured?.id ?? list[0]?.id ?? null;
-    return { featuredTariff: featured, listTariffs: rest, defaultSelectedId: defaultId };
+    const all = featured != null ? [featured, ...rest] : rest;
+    return { featuredTariff: featured, listTariffs: rest, defaultSelectedId: defaultId, allTariffs: all };
   }, [tariffs]);
 
   const [selectedPlan, setSelectedPlan] = useState(defaultSelectedId);
@@ -32,6 +33,28 @@ export default function Main({ tariffs = [], timerEnded = false }) {
             <span className="text-[#FDB056] px-8 text-Montserrat">тариф</span>
           </p>
         </div>
+
+        {/* List of rates offered by the service */}
+        {allTariffs.length > 0 && (
+          <div className="mb-6 sm:mb-8 rounded-xl bg-[#2F3436] border border-[#484D4E] px-4 sm:px-6 py-3 sm:py-4">
+            <p className="text-[#9AA0A6] text-sm sm:text-base mb-2">Тарифы сервиса:</p>
+            <ul className="flex flex-wrap gap-2 sm:gap-3">
+              {allTariffs.map((t) => (
+                <li
+                  key={t.id}
+                  className="text-white text-sm sm:text-base font-medium px-3 py-1.5 rounded-lg bg-[#3a3f41] border border-[#484D4E]"
+                >
+                  {t.period || t.title}
+                  {t.description ? (
+                    <span className="text-[#919191] font-normal text-xs sm:text-sm ml-1.5 block sm:inline">
+                      — {t.description}
+                    </span>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Image + Content */}
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 xl:gap-14 items-start lg:items-center">

@@ -2,11 +2,9 @@ import React from "react";
 import Badge from "./Badge";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-const priceBlockClasses = "transition-all duration-300 ease-out";
-const discountHideClasses = "pointer-events-none opacity-0 scale-95";
-const discountShowClasses = "opacity-100 scale-100";
 /** Single source of truth so price font is identical with and without discount */
 const mainPriceFontClasses = "font-bold leading-tight tracking-tight text-[42px]";
+/** When timer expires: discount block runs price-out (fade+scale out), then full price runs price-in (fade+scale in with delay) for a clearer transition */
 
 export default function ItemCard({
   value = "",
@@ -25,7 +23,7 @@ export default function ItemCard({
   const isMobile = useMediaQuery("(max-width:600px)");
   const badgeWrap = (
     <div
-      className={`absolute top-0 ${!isMobile ? "left-7" : "right-20"} transition-all duration-300 ease-out ${discountActive ? "opacity-100 scale-100" : discountHideClasses
+      className={`absolute top-0 ${!isMobile ? "left-7" : "right-20"} ${discountActive ? "opacity-100 scale-100" : "pointer-events-none opacity-0 scale-95 animate-price-out"
         }`}
     >
       <Badge value={value} />
@@ -84,15 +82,19 @@ export default function ItemCard({
       className={`flex flex-col justify-center items-center text-center relative min-h-[100px] sm:min-h-[120px] ${featured ? "w-full md:w-1/3" : ""
         }`}
     >
+      {/* Discounted price: visible by default; when timer ends, runs price-out then stays hidden */}
       <div
-        className={`absolute inset-0 flex flex-col justify-center items-center text-center ${priceBlockClasses} ${discountActive ? discountShowClasses : discountHideClasses
-          }`}
+        className={`absolute inset-0 flex flex-col justify-center items-center text-center ${
+          discountActive ? "opacity-100 scale-100" : "animate-price-out pointer-events-none"
+        }`}
       >
         {priceContent(featured)}
       </div>
+      {/* Full price only: hidden by default; when timer ends, runs price-in (with delay) for a clear takeover */}
       <div
-        className={`absolute inset-0 flex flex-col justify-center items-center text-center ${priceBlockClasses} ${discountActive ? discountHideClasses : discountShowClasses
-          }`}
+        className={`absolute inset-0 flex flex-col justify-center items-center text-center ${
+          discountActive ? "opacity-0 scale-[0.97] pointer-events-none" : "animate-price-in"
+        }`}
       >
         {priceContentFull(featured)}
       </div>
@@ -130,7 +132,7 @@ export default function ItemCard({
       className={`${baseCardClasses} bg-[#313637] min-w-0 flex-1 flex flex-col px-4 sm:px-5 md:px-6 py-5 sm:py-6 md:py-8`}
     >
       <div
-        className={`absolute top-0 ${!isMobile ? "left-6" : "right-8"} ${priceBlockClasses} ${discountActive ? discountShowClasses : discountHideClasses
+        className={`absolute top-0 ${!isMobile ? "left-6" : "right-8"} ${discountActive ? "opacity-100 scale-100" : "pointer-events-none opacity-0 scale-95 animate-price-out"
           }`}
       >
         <Badge value={value} />
