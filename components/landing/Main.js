@@ -90,7 +90,7 @@ export default function Main({ tariffs = [], timerEnded = false }) {
             {/* Info message */}
             <div className="mt-2 sm:mt-4 flex items-start sm:items-center gap-3 sm:gap-4 rounded-xl sm:rounded-[18px] bg-[#2F3436] px-4 sm:px-6 py-3 sm:py-4 w-full max-w-[520px]">
 
-              <span className="text-[#FDB056] text-base sm:text-lg leading-none shrink-0 mt-0.5 sm:mt-0">
+              <span className="text-[#FDB056] text-2xl  font-bold leading-none shrink-0 mt-0.5 sm:mt-0">
                 !
               </span>
 
