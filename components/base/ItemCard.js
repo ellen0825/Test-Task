@@ -5,6 +5,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 const priceBlockClasses = "transition-all duration-300 ease-out";
 const discountHideClasses = "pointer-events-none opacity-0 scale-95";
 const discountShowClasses = "opacity-100 scale-100";
+/** Single source of truth so price font is identical with and without discount */
+const mainPriceFontClasses = "font-bold leading-tight tracking-tight text-[42px]";
 
 export default function ItemCard({
   value = "",
@@ -48,8 +50,7 @@ export default function ItemCard({
         </div>
       )}
       <div
-        className={`font-bold leading-tight tracking-tight ${selected ? "text-[#FDB056]" : "text-white"
-          }  text-[42px] `}
+        className={`${mainPriceFontClasses} ${selected ? "text-[#FDB056]" : "text-white"}`}
       >
         {price} ₽
       </div>
@@ -67,10 +68,13 @@ export default function ItemCard({
         </div>
       )}
       <div
-        className={`font-bold leading-tight tracking-tight ${selected ? "text-[#FDB056]" : "text-white"
-          }text-[42px] `}
+        className={`${mainPriceFontClasses} ${selected ? "text-[#FDB056]" : "text-white"}`}
       >
         {oldPrice} ₽
+      </div>
+      {/* Invisible spacer so layout matches discount state and price position stays fixed */}
+      <div className="w-full text-xl text-transparent line-through text-right mt-0.5 sm:mt-1 select-none" aria-hidden="true">
+        0 ₽
       </div>
     </>
   );

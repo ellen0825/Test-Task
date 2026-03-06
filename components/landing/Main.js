@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import CustomImage from "../base/CustomImage";
 import ItemCard from "../base/ItemCard";
 import Button from "../base/Button";
+import Link from "next/link";
 import useMediaQuery from "@mui/material/useMediaQuery";
 export default function Main({ tariffs = [], timerEnded = false }) {
   const { featuredTariff, listTariffs, defaultSelectedId } = useMemo(() => {
@@ -118,30 +119,37 @@ export default function Main({ tariffs = [], timerEnded = false }) {
                   }`}
               >
                 <svg
-                  className="w-[14px] h-[14px] text-[#FDB056] opacity-0 transition"
+                  className="w-[20px] h-[24px] text-[#FDB056] opacity-0 transition "
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="3"
+                  strokeWidth="2"
                 >
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-
-              <p className="text-sm md:text-base text-[#9AA0A6] leading-snug">
-                Я согласен(а) с{" "}
-                <span className="text-gray-300 underline underline-offset-2">
-                  офертой рекуррентных платежей
-                </span>{" "}
-                и{" "}
-                <span className="text-gray-300 underline underline-offset-2">
-                  Политикой конфиденциальности
-                </span>.
-              </p>
+             
+                  <p className="text-sm md:text-base text-[#9AA0A6] leading-snug">
+                    Я согласен(а) с{" "}
+                    <Link
+                      href="/offer"
+                      className="text-gray-300 underline underline-offset-2"
+                    >
+                      офертой рекуррентных платежей
+                    </Link>{" "}
+                    и{" "}
+                    <Link
+                      href="/privacy"
+                      className="text-gray-300 underline underline-offset-2"
+                    >
+                      Политикой конфиденциальности
+                    </Link>
+                    .
+                  </p>
 
             </label>
 
-            {/* Button */}
+            {/* Button: при нажатии без флажка выделяется красным */}
             <div className="flex justify-center sm:justify-start">
               <Button
                 onClick={() => {
@@ -152,6 +160,7 @@ export default function Main({ tariffs = [], timerEnded = false }) {
                   }
                 }}
                 className="w-full sm:w-[352px]"
+                error={checkboxError}
               >
                 Купить
               </Button>
