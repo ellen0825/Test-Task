@@ -21,7 +21,7 @@ export default function Main({ tariffs = [], timerEnded = false }) {
   const [agreed, setAgreed] = useState(false);
   const [checkboxError, setCheckboxError] = useState(false);
   const [purchaseSubmitted, setPurchaseSubmitted] = useState(false);
-  const isMobile = useMediaQuery("(max-width:330px)");
+  const isMobile = useMediaQuery("(max-width:380px)");
   const selectedTariff = useMemo(
     () => allTariffs.find((t) => String(t?.id) === String(selectedPlan)),
     [allTariffs, selectedPlan]
@@ -29,7 +29,7 @@ export default function Main({ tariffs = [], timerEnded = false }) {
   return (
     <div className="bg-[#232829] flex justify-center min-h-screen px-4 md:px-12 pt-24 pb-10">
 
-      <div className="max-w-[1218px] w-full">
+      <div className="max-w-[1000px] w-full mx-auto">
 
         {/* Title */}
         <div className="py-12" >
@@ -98,8 +98,8 @@ export default function Main({ tariffs = [], timerEnded = false }) {
               />
             )}
 
-            {/* Остальные тарифы */}
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 md:gap-6 flex-wrap">
+            {/* Остальные тарифы: одна колонка на узких экранах, как в макете */}
+            <div className="flex flex-col md:flex-row gap-4 sm:gap-5 md:gap-6 flex-wrap">
               {listTariffs.map((t) => (
                 <ItemCard
                   key={t.id}
