@@ -109,8 +109,8 @@ export default function ItemCardMobile({
     </div>
   );
 
-  /* Shared two-column grid: 50/50; left padding larger, right padding smaller */
-  const cardGridClasses = "grid grid-cols-2 gap-4 sm:gap-6 pl-6 pr-4 sm:pl-10 sm:pr-6 pt-14 sm:pt-20 pb-5 sm:pb-6 items-start min-h-[100px]";
+  /* Shared two-column grid: 50/50; symmetric padding so content isn’t tilted */
+  const cardGridClasses = "grid grid-cols-2 gap-4 sm:gap-6 px-5 sm:px-8 pt-14 sm:pt-20 pb-5 sm:pb-6 items-start min-h-[100px]";
 
   /* ================= FEATURED CARD (MOBILE) ================= */
   if (featured) {

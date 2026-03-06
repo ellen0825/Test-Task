@@ -76,8 +76,8 @@ export default function Main({ tariffs = [], timerEnded = false }) {
             />
           </div>
 
-          {/* Right content: side margins on mobile, full width on desktop */}
-          <div className="w-full lg:w-2/3 flex flex-col gap-4 sm:gap-6 min-w-0 mx-3 md:mx-0">
+          {/* Right content: align with page left edge (no extra margin) */}
+          <div className="w-full lg:w-2/3 flex flex-col gap-4 sm:gap-6 min-w-0">
 
             {!featuredTariff && listTariffs.length === 0 && (
               <div className="rounded-3xl bg-[#2F3436] border border-[#484D4E] px-8 py-12 text-center">
@@ -183,8 +183,8 @@ export default function Main({ tariffs = [], timerEnded = false }) {
               </label>
 
             {/* Button: при нажатии без флажка выделяется красным */}
-            <div className="flex flex-col gap-3">
-              <div className="flex justify-center sm:justify-start">
+            <div className="flex flex-col gap-3 ">
+              <div className="flex justify-center ">
                 <Button
                   onClick={() => {
                     if (!agreed) {
