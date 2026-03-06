@@ -30,6 +30,7 @@ export default function Home({ tariffs: initialTariffs }) {
   useEffect(() => {
     let cancelled = false
     const EXTERNAL_URL = 'https://t-core.fit-hub.pro/Test/GetTariffs'
+    // text = rate plan description; discount calculated manually (not from API)
     const mapFromRaw = (rawList) =>
       (rawList || []).map((raw, i) => {
         const fullPrice = Number(raw.full_price) || 0
