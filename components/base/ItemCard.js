@@ -90,7 +90,7 @@ export default function ItemCard({
 
   const priceBlock = (
     <div
-      className={`flex flex-col justify-center items-center text-center relative min-h-[90px] sm:min-h-[110px] ${
+      className={`flex flex-col justify-center items-center text-center relative min-h-[72px] sm:min-h-[90px] ${
         featured ? "w-full md:w-1/3" : ""
       }`}
     >
@@ -130,7 +130,7 @@ export default function ItemCard({
         {badgeWrap}
         {hitLabel}
 
-        <div className="flex flex-col md:flex-row px-5 sm:px-6 md:px-12 lg:px-16 py-6 sm:py-8 md:py-10 gap-6 sm:gap-8 md:gap-12 items-center">
+        <div className="flex flex-col md:flex-row px-5 sm:px-6 md:px-12 lg:px-16 py-5 sm:py-6 md:py-8 gap-4 sm:gap-6 md:gap-8 items-center">
           {priceBlock}
 
           <div className="w-full md:w-2/3 text-[#CFCFCF] text-xs sm:text-sm lg:text-[13px] md:text-[16px] leading-relaxed text-center md:text-left whitespace-pre-line px-2 sm:px-0">
@@ -147,7 +147,7 @@ export default function ItemCard({
     <button
       type="button"
       onClick={onClick}
-      className={`${baseCardClasses} bg-[#313637] min-w-0 flex-1 flex flex-col px-4 sm:px-5 md:px-6 py-5 sm:py-6 md:py-8`}
+      className={`${baseCardClasses} bg-[#313637] min-w-0 flex-1 flex flex-col px-4 sm:px-5 md:px-6 py-4 sm:py-5 md:py-6`}
     >
       <div
         className={`absolute top-0 ${
@@ -161,14 +161,14 @@ export default function ItemCard({
 
       {hitLabel}
 
-      <div className="text-base sm:text-lg md:text-xl lg:text-[17px] text-white text-center mt-8 sm:mt-10 mb-3 sm:mb-4 font-medium">
+      <div className="text-base sm:text-lg md:text-xl lg:text-[17px] text-white text-center mt-6 sm:mt-8 mb-2 sm:mb-3 font-medium">
         {period}
       </div>
 
       {priceBlock}
 
       {/* DESCRIPTION */}
-      <div className="lg:text-[12px] md:text-[16px] text-[#B3B3B3] mt-4 sm:mt-6 leading-snug text-left">
+      <div className="lg:text-[12px] md:text-[16px] text-[#B3B3B3] mt-3 sm:mt-4 leading-snug text-left">
         <div>{description}</div>
         <div className="text-[#9a9a9a]">в порядок</div>
       </div>
