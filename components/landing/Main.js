@@ -20,7 +20,12 @@ export default function Main({ tariffs = [], timerEnded = false }) {
   const [selectedPlan, setSelectedPlan] = useState(defaultSelectedId);
   const [agreed, setAgreed] = useState(false);
   const [checkboxError, setCheckboxError] = useState(false);
+  const [purchaseSubmitted, setPurchaseSubmitted] = useState(false);
   const isMobile = useMediaQuery("(max-width:330px)");
+  const selectedTariff = useMemo(
+    () => allTariffs.find((t) => String(t?.id) === String(selectedPlan)),
+    [allTariffs, selectedPlan]
+  );
   return (
     <div className="bg-[#232829] flex justify-center min-h-screen px-4 md:px-12 pt-24 pb-10">
 
@@ -173,20 +178,27 @@ export default function Main({ tariffs = [], timerEnded = false }) {
             </label>
 
             {/* Button: при нажатии без флажка выделяется красным */}
-            <div className="flex justify-center sm:justify-start">
-              <Button
-                onClick={() => {
-                  if (!agreed) {
-                    setCheckboxError(true);
-                  } else {
-                    // покупка
-                  }
-                }}
-                className="w-full sm:w-[352px]"
-                error={checkboxError}
-              >
-                Купить
-              </Button>
+            <div className="flex flex-col gap-3">
+              <div className="flex justify-center sm:justify-start">
+                <Button
+                  onClick={() => {
+                    if (!agreed) {
+                      setCheckboxError(true);
+                    } else {
+                      setPurchaseSubmitted(true);
+                    }
+                  }}
+                  className="w-full sm:w-[352px]"
+                  error={checkboxError}
+                >
+                  Купить
+                </Button>
+              </div>
+              {purchaseSubmitted && selectedTariff && (
+                <p className="text-[#81FE95] text-sm sm:text-base font-medium">
+                  Спасибо! Выбран тариф: {selectedTariff.period}.
+                </p>
+              )}
             </div>
 
             {/* Legal text */}
